@@ -1,4 +1,4 @@
-var PLAYER_SPEED = 0.2;
+var PLAYER_SPEED = 0.5;
 var Player = (function (_super) {
     __extends(Player, _super);
     function Player() {
@@ -6,11 +6,11 @@ var Player = (function (_super) {
         this.isLeftFacing = false;
         this.speed = PLAYER_SPEED;
         this.appearance = new egret.Bitmap();
-        this.appearance.height = 93;
+        this.appearance.height = 90;
         this.appearance.width = 60;
-        this.appearance.scaleX = 0.55;
-        this.appearance.scaleY = 0.55;
-        this.appearance.anchorOffsetX = 30;
+        this.appearance.scaleX = 0.50;
+        this.appearance.scaleY = 0.50;
+        this.appearance.anchorOffsetX = 40;
         this.appearance.anchorOffsetY = 42;
         this.animationList = {
             "idle_left": ["i0L_png", "i1L_png", "i2L_png", "i3L_png", "i4L_png", "i5L_png", "i6L_png", "i7L_png", "i8L_png", "i9L_png", "i10L_png", "i11L_png", "i12L_png", "i13L_png"],

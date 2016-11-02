@@ -1,5 +1,4 @@
-var PLAYER_SPEED = 0.2;
-
+var PLAYER_SPEED = 0.5;
 class Player extends egret.DisplayObjectContainer {
     appearance: egret.Bitmap;
     fsm: StateMachine;
@@ -19,11 +18,11 @@ class Player extends egret.DisplayObjectContainer {
         super();
         this.speed = PLAYER_SPEED;
         this.appearance = new egret.Bitmap();
-        this.appearance.height = 93;
+        this.appearance.height = 90;
         this.appearance.width = 60;
-        this.appearance.scaleX = 0.55;
-        this.appearance.scaleY = 0.55;
-        this.appearance.anchorOffsetX = 30;
+        this.appearance.scaleX = 0.50;
+        this.appearance.scaleY = 0.50;
+        this.appearance.anchorOffsetX = 40;
         this.appearance.anchorOffsetY = 42;
 
         this.animationList = {
@@ -38,11 +37,10 @@ class Player extends egret.DisplayObjectContainer {
 
     }
 
-    move(location: Vector2) {
+    move(location: complexor) {
         this._moveState = new MoveState(this, location)
-        this.fsm.switchState(this._moveState );
-    }
-
+        this.fsm.switchState(this._moveState);
+    }   
 
     createBitmapByName(name: string): egret.Bitmap {
         var result = new egret.Bitmap();
@@ -76,11 +74,9 @@ class IdleState implements State {
 
     }
 
-    ExitState() {
+    ExitState() {      
         this.Onidel = false;
-
     }
-
     GetState() {
         return this;
     }
@@ -89,11 +85,11 @@ class IdleState implements State {
 class MoveState implements State {
     player: Player;
     private OnMove: boolean = false;
-    playerlocation: Vector2;
+    playerlocation: complexor;
     StateName = "Move";
     public isOnposition = false;
 
-    constructor(player: Player, location: Vector2) {
+    constructor(player: Player, location: complexor) {
         this.player = player;
         this.playerlocation = location;
         this.player.isLeftFacing = ((location.x - this.player.x) > 0 ? false : true);

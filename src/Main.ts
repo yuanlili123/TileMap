@@ -29,8 +29,6 @@
 
 class Main extends egret.DisplayObjectContainer {
 
-
-    
     private static TILESIZE = 64;
     private pointx: number;
     private pointy: number;
@@ -123,48 +121,20 @@ class Main extends egret.DisplayObjectContainer {
      * Create a game scene
      */
     private createGameScene(): void {
+
         var myGrid = new Grid(10, 10);
-
         var myRoad = new Array();
-
         var myMap = new TileMap(myGrid);
         this.addChild(myMap);
 
         var player = new Player();
         this.addChild(player);
-        player.x = 32;
-        player.y = 32;
+        player.x = 30;
+        player.y = 30;
 
         this.touchEnabled = true;
-        var index = 0;
-        var isStartJudge = false;
-
-        function moveJudge() {
-            var timeCal = new egret.Timer(1000, 0)
-            timeCal.start();
-            console.log("Start Judege ?" + isStartJudge);
-            timeCal.addEventListener(egret.TimerEvent.TIMER, () => {
-                if (isStartJudge) {
-                    console.log("Onposition ? " + player._moveState.isOnposition);
-                    if (player.x == myRoad[index].x * Main.TILESIZE + Main.TILESIZE / 2 && player.y == myRoad[index].y * Main.TILESIZE + Main.TILESIZE / 2) {
-
-                        index++;
-                        player.move(new Vector2(myRoad[index].x * Main.TILESIZE + Main.TILESIZE / 2, myRoad[index].y * Main.TILESIZE + Main.TILESIZE / 2));
-                        console.log("current index " + index);
-                         if (index == myRoad.length-1) {
-                            timeCal.removeEventListener(egret.TimerEvent.TIMER,()=>{},this)
-                            index = 0;
-                            isStartJudge = false;
-                        }
-                    }
-
-
-                }
-              console.log("Start Judege ?" + isStartJudge);
-              
-            }, this);
-
-        }
+        var inx = 0;
+        var startJudge = false;
 
         this.stage.addEventListener(egret.TouchEvent.TOUCH_TAP, (e: egret.TouchEvent) => {
 
@@ -174,12 +144,40 @@ class Main extends egret.DisplayObjectContainer {
             myMap.grid.setStartPoint(Math.floor(player.x / Main.TILESIZE), Math.floor(player.y / Main.TILESIZE));
 
             myRoad = myMap.findPath();
-            isStartJudge = true;
+            startJudge = true;
 
-            player.move(new Vector2(myRoad[index].x * Main.TILESIZE + Main.TILESIZE / 2, myRoad[index].y * Main.TILESIZE + Main.TILESIZE / 2));
+            player.move(new complexor(myRoad[inx].x * Main.TILESIZE + Main.TILESIZE / 2, myRoad[inx].y * Main.TILESIZE + Main.TILESIZE / 2));
 
         }, this);
-        moveJudge();
+
+        function moveingJudge() {
+            var timeCal = new egret.Timer(1000, 0)
+            timeCal.start();
+            console.log("Start Judege ?" + startJudge);
+            timeCal.addEventListener(egret.TimerEvent.TIMER, () => {
+                if (startJudge) {
+                    console.log("Onposition ? " + player._moveState.isOnposition);
+                    if (player.x == myRoad[inx].x * Main.TILESIZE + Main.TILESIZE / 2 && player.y == 
+                    myRoad[inx].y * Main.TILESIZE + Main.TILESIZE / 2) {
+
+                        inx++;
+                        player.move(new complexor(myRoad[inx].x * Main.TILESIZE + Main.TILESIZE / 2, 
+                        myRoad[inx].y * Main.TILESIZE + Main.TILESIZE / 2));
+                        console.log("current index " + inx);
+                         if (inx == myRoad.length-1) {
+                            timeCal.removeEventListener(egret.TimerEvent.TIMER,()=>{},this)
+                            inx = 0;
+                            startJudge = false;
+                        }
+                    }
+                }
+              console.log("Start Judege ?" + startJudge);
+              
+            }, this);
+
+        }
+
+        moveingJudge();
     }
     /**
      * 根据name关键字创建一个Bitmap对象。name属性请参考resources/resource.json配置文件的内容。

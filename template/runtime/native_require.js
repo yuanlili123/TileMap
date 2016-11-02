@@ -8,17 +8,14 @@ var game_file_list = [
 	"libs/modules/game/game.native.js",
 	"libs/modules/res/res.js",
 	"libs/modules/tween/tween.js",
-	"bin-debug/Animation.js",
 	"bin-debug/Astar.js",
 	"bin-debug/Grid.js",
 	"bin-debug/LoadingUI.js",
 	"bin-debug/Main.js",
 	"bin-debug/Map.js",
-	"bin-debug/MoveCtrl.js",
+	"bin-debug/Move.js",
 	"bin-debug/Player.js",
 	"bin-debug/Point.js",
-	"bin-debug/StateMachine.js",
-	"bin-debug/Move.js",
 	//----auto game_file_list end----
 ];
 

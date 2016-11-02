@@ -1,7 +1,11 @@
-const SIZE1 = 1;
-const SIZE32 = 32;
-const SIZE48 = 48;
-class Vector2 {
+
+const Big1 = 1;
+
+const Big2 = 30;
+
+const Big3 = 50;
+
+class complexor {
     _x: number = 0;
     _y: number = 0;
     public constructor(x: number = 0, y: number = 0) {
@@ -21,7 +25,7 @@ class Vector2 {
         this._y = y;
     }
 }
-class Vector2_pixel extends Vector2 {
+class complexor_pixel extends complexor {
     size: number = 1;
     public constructor(x: number, y: number, size: number) {
         super(x, y);
@@ -32,49 +36,121 @@ class Vector2_pixel extends Vector2 {
     public get ix(): number {
         return this.x / this.size;
     }
-    public set ix(value: number) {
-        this.x = value * this.size;
+    public set ix(sax: number) {
+        this.x = sax * this.size;
     }
     public get iy(): number {
         return this.y / this.size;
     }
-    public set iy(value: number) {
-        this.y = value * this.size;
+    public set iy(sax: number) {
+        this.y = sax * this.size;
     }
-    public get iPos(): Vector2 {
-        return new Vector2(this.ix, this.iy);
+    public get iPos(): complexor {
+        return new complexor(this.ix, this.iy);
     }
-    public get Pos(): Vector2 {
-        return new Vector2(this.x, this.y);
+    public get Pos(): complexor {
+        return new complexor(this.x, this.y);
     }
-    public static PixelToReal(value: number): number {
-        return value * SIZE1;
+    public static PixelToReal(sax: number): number {
+        return sax * Big1;
     }
-    public static RealToPixel(value: number): number {
-        return value / SIZE1;
+    public static RealToPixel(sax: number): number {
+        return sax / Big1;
     }
 }
-class Vector2_p32 extends Vector2_pixel {
+class complexor_p2 extends complexor_pixel {
     public constructor(x: number, y: number) {
-        super(x, y, SIZE32);
+        super(x, y, Big2);
     }
-    public static PixelToReal(value: number): number {
-        return value * SIZE32;
+    public static PixelToReal(sax: number): number {
+        return sax * Big2;
     }
-    public static RealToPixel(value: number): number {
-        return value / SIZE32;
+    public static RealToPixel(sax: number): number {
+        return sax / Big2;
     }
 
 }
-class Vector2_p48 extends Vector2_pixel {
+class complexor_p3 extends complexor_pixel {
     public constructor(x: number, y: number) {
-        super(x, y, SIZE48);
+        super(x, y, Big3);
     }
-    public static PixelToReal(value: number): number {
-        return value * SIZE48;
+    public static PixelToReal(sax: number): number {
+        return sax * Big3;
     }
-    public static RealToPixel(value: number): number {
-        return value / SIZE48;
+    public static RealToPixel(sax: number): number {
+        return sax / Big3;
     }
 
+}
+class Animation{
+    timePassed:number;
+    FPS:number=4;
+    textureList=[];
+    curFrame:number;
+    self:egret.Bitmap;
+    public constructor(anim:any,self:egret.Bitmap,FPS = 4){
+        this.textureList=anim;
+        this.self=self;
+        this.FPS=FPS;
+        this.timePassed=0;
+        this.curFrame=0;
+    }
+    public playCurcularly(timePassed:number){
+        this.timePassed+=timePassed;
+        if(this.timePassed>= 1000/this.FPS){
+            this.timePassed-=(1000/this.FPS);
+            this.curFrame=(++this.curFrame) % this.textureList.length;
+            this.self.texture=RES.getRes(this.textureList[this.curFrame]);
+        }
+    }
+    public playOnce(order:string,timePassed:number){
+        this.timePassed+=timePassed;
+        if(this.timePassed>= 1000/this.FPS){
+            this.timePassed-=(1000/this.FPS);
+            var list=this.textureList[order];
+            if(this.curFrame < list.length){
+                this.self.texture=RES.getRes(list[this.curFrame]);
+                this.curFrame++;
+            }
+        }
+    }
+}
+
+interface State {
+    player :any;
+    EnterState();
+    DuringState(enterTimes:number);
+    ExitState();
+    GetState():State;
+    StateName:String;
+}
+
+class StateMachine {
+    curState: State;
+    context: any;
+    time = 0;
+    constructor(firstState: State) {
+        this.curState = firstState;
+        this.curState.EnterState();
+    }
+    public runMachine(timeStamp:number):boolean {
+        var now = timeStamp;
+        let time = this.time;
+        let pass = now-time;
+        this.time=now;
+        this.curState.DuringState(pass);
+        var newState: State = this.curState.GetState();
+        if (newState !=this.curState) {
+            console.log("switch to new state");
+            this.curState.ExitState();
+            this.curState = newState;
+            this.curState.EnterState();
+        }
+        return false;
+    }
+    public switchState(target:State){
+        this.curState.ExitState();
+        target.EnterState();
+        this.curState=target;
+    }
 }
